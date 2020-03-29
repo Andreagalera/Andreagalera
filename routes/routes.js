@@ -12,6 +12,7 @@ const controller = require('../controllers/clientCtrl');
 router.get('/', controller.getData);
 router.post('/', controller.postData);
 router.post('/sign', controller.signMessage);
+router.post('/nr', controller.noRepudioMessage);
 
 
 module.exports = router;
