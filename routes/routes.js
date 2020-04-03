@@ -14,5 +14,7 @@ router.post('/', controller.postData);
 router.post('/sign', controller.signMessage);
 router.post('/nr', controller.noRepudioMessage);
 
+router.get('/advertB', controller.advertB);
+
 
 module.exports = router;

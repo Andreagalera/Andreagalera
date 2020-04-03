@@ -4,11 +4,18 @@ const controllerCtrl = {};
 const rsa = require('rsa');
 const bc = require('bigint-conversion');
 const sha = require('object-sha');
+var CryptoJS = require('node-cryptojs-aes').CryptoJS;
+const Crypto = require("crypto");
+
+
 
 let keyPair;
 
 let Po;
 
+let  k;
+
+let cryptotext
 controllerCtrl.getData = async (req, res) => {
   try {
     keyPair = await rsa.generateRandomKeys();
@@ -46,6 +53,7 @@ controllerCtrl.signMessage = async (req, res) => {
 controllerCtrl.noRepudioMessage = async (req, res) => {
   console.log("No repudation");
   console.log(req.body);
+  cryptotext = req.body.body.msg;
   try {
     const m = bc.hexToBigint(req.body.body.msg);
     var ts = new Date();
@@ -69,6 +77,35 @@ controllerCtrl.noRepudioMessage = async (req, res) => {
   }
 }
 
+function getK(){
+  console.log("getK");
+require('request')('http://localhost:3001/api/clientes/downloadK', (err, res, body) => {
+  console.log(body);
+  k = body;
+  decrypt(k);
+  });
+}
+
+
+controllerCtrl.advertB = async (req, res) => {
+  console.log("Advert");
+  console.log(req.body);
+  getK();
+}
+
+
+function decrypt(key) {
+  console.log(key);
+  console.log(cryptotext);
+
+  // var decrypted = CryptoJS.AES.decrypt(cryptotext, key);
+  // var data = CryptoJS.enc.Utf8.stringify(decrypted);
+  // console.log( data );  // output : myMessage
+
+  // var decrypted =     CryptoJS.AES.decrypt(cryptotext,key);
+  // var data = CryptoJS.enc.Utf8.stringify(decrypted);
+  // console.log(data);
+}
 
 
 module.exports = controllerCtrl;

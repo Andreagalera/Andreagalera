@@ -13,9 +13,11 @@
     "bigint-conversion": "^2.1.1",
     "bigint-crypto-utils": "^2.4.7",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "mongoose": "^5.9.3",
     "morgan": "^1.9.1",
+    "node-cryptojs-aes": "^0.4.0",
     "object-sha": "^1.0.3",
     "rsa": "file:../../rsa"
   },
