@@ -5,7 +5,7 @@ const rsa = require('rsa');
 const bc = require('bigint-conversion');
 const sha = require('object-sha');
 var CryptoJS = require('node-cryptojs-aes').CryptoJS;
-const Crypto = require("crypto");
+const crypto = require("crypto");
 
 
 
@@ -15,6 +15,8 @@ let keyPair;
 let Po;
 
 let k;
+
+let iv;
 
 let aPubKey;
 
@@ -96,8 +98,10 @@ function getK() {
   console.log("getK");
   require('request')('http://localhost:3001/api/clientes/downloadK', (err, res, body) => {
     console.log(body);
-    k = body;
-    decrypt(k);
+    const bod = body.split("-");
+    k = bod[0];
+    iv = bod[1];
+    decrypt(k, iv);
   });
 }
 
@@ -109,17 +113,18 @@ controllerCtrl.advertB = async (req, res) => {
 }
 
 
-function decrypt(key) {
+function decrypt(key, iv) {
+  console.log(iv);
   console.log(key);
   console.log(cryptotext);
+  let key2 = bc.hexToBuf(key);
+  let iv2 = bc.hexToBuf(iv);
 
-  // var decrypted = CryptoJS.AES.decrypt(cryptotext, key);
-  // var data = CryptoJS.enc.Utf8.stringify(decrypted);
-  // console.log( data );  // output : myMessage
-
-  // var decrypted =     CryptoJS.AES.decrypt(cryptotext,key);
-  // var data = CryptoJS.enc.Utf8.stringify(decrypted);
-  // console.log(data);
+ let encryptedText = Buffer.from(cryptotext, 'hex');
+ let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key2), iv2);
+ let decrypted = decipher.update(encryptedText);
+ decrypted = Buffer.concat([decrypted, decipher.final()]);
+ console.log(decrypted.toString());
 }
 
 
